@@ -40,6 +40,61 @@ const userRoutes: FastifyPluginAsync = async (fastify) => {
     };
   });
 
+    // Create user profile
+  fastify.post('/profile', {
+    preHandler: [fastify.authenticate],
+    schema: {
+      body: Type.Object({
+        firstName: Type.String({ maxLength: 100 }),
+        lastName: Type.String({ maxLength: 100 }),
+        graduationYear: Type.Integer(),
+        currentCity: Type.String({ maxLength: 100 }),
+        latitude: Type.Optional(Type.Number()),
+        longitude: Type.Optional(Type.Number()),
+        profilePic: Type.Optional(Type.String()), // Media ID reference
+        organization: Type.Optional(Type.String({ maxLength: 200 })),
+        bloodGroup: Type.Optional(Type.String({ maxLength: 3 })),
+        phone: Type.String({ maxLength: 50 }),
+        currentState: Type.String({ maxLength: 50 }),
+        currentCountry: Type.String({ maxLength: 20 }),
+        banner: Type.Optional(Type.String({ maxLength: 25 })),
+        location: Type.Optional(Type.String({ maxLength: 50 })),
+        visibilityPreference: Type.Boolean({ default: true }),
+        about: Type.Optional(Type.String()),
+        socialLinks: Type.Optional(Type.Any()),
+        specializationId: Type.Optional(Type.String()),
+        professionId: Type.Optional(Type.String()),
+      }),
+      response: {
+        201: Type.Object({
+          success: Type.Boolean(),
+          data: Type.Any(),
+        }),
+      },
+    },
+  }, async (request:any, reply) => {
+    const authUserId = request.user.userId;
+ 
+    // Check if profile already exists
+    const existing = await userProfileService.findByAuthUserId(authUserId);
+    if (existing) {
+      return reply.code(409).send({
+        success: false,
+        error: 'Profile already exists',
+      });
+    }
+ 
+    const profile = await userProfileService.create({
+      ...request.body,
+      userAuthId: authUserId,
+    });
+ 
+    return reply.code(201).send({
+      success: true,
+      data: profile,
+    });
+  });
+ 
 
   // Update user profile
   fastify.put('/profile', {

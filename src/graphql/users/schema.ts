@@ -50,6 +50,11 @@ export const userSchema = gql`
     offset: Int!
   }
 
+    input YearRange {
+    min: Int
+    max: Int
+  }
+
   input UserFilter {
     query: String
     bloodGroup: String
@@ -60,24 +65,43 @@ export const userSchema = gql`
     offset: Int
   }
 
-  input YearRange {
-    min: Int!
-    max: Int!
-  }
-
+  
   input CreateUserInput {
-    firstName: String!
-    lastName: String!
-    email: String!
-    userAuthId: String!
-  }
+  firstName: String!
+  lastName: String!
+  graduationYear: Int!
+  currentCity: String!
+  currentState: String!
+  currentCountry: String!
+  organization: String
+  bloodGroup: String
+  about: String
+  profilePic: ID
+  phone: String!
+  banner: ID
+  professionId: ID
+  specializationId: ID
+  visibilityPreference: Boolean!
+  socialLinks: [String]
+  authUserId: ID
+}
 
   input UpdateUserInput {
-    firstName: String
-    lastName: String
-    organization: String
-    currentCity: String
-    bloodGroup: String
+  firstName: String
+  lastName: String
+  graduationYear: Int
+  currentCity: String
+  currentState: String
+  currentCountry: String
+  organization: String
+  bloodGroup: String
+  about: String
+  profilePic: ID
+  phone: String
+  banner: ID
+  professionId: ID
+  specializationId: ID
+  visibilityPreference: Boolean
   }
 
   type Query {
