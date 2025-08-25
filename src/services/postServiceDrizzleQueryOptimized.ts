@@ -142,7 +142,7 @@ export class PostServiceDrizzleQueryOptimized {
        userId: post.postByUserId, // Add this for easier access
        businessId: post.postByBusinessId, // Add this for easier access
       images: galleryImages.map((img:any, index:any) => ({
-        imgId: img.id,
+        imgid: img.id,
         postId: post.id,
         imageUrl: img.url || null,
       })),
@@ -151,8 +151,14 @@ export class PostServiceDrizzleQueryOptimized {
         name: `${post.postByUser.firstName} ${post.postByUser.lastName}`,
         firstName: post.postByUser.firstName,
         lastName: post.postByUser.lastName,
-        profilePic: userProfilePic?.url || null,
-        profession: post.postByUser.profession?.name || null,
+        profilePic: userProfilePic ? {
+    id: userProfilePic.id,
+    url: userProfilePic.url,
+  } : null,
+  profession: post.postByUser.profession ? {
+    id: post.postByUser.profession.id,
+    name: post.postByUser.profession.name,
+  } : null,
       } : null,
       businessDetails: post.postByBusiness ? {
         id: post.postByBusiness.id,
@@ -231,6 +237,7 @@ export class PostServiceDrizzleQueryOptimized {
         updatedAt: true,
       },
       with: {
+        
         postByUser: {
           columns: {
             id: true,
@@ -278,11 +285,6 @@ export class PostServiceDrizzleQueryOptimized {
     const userIds = posts.map((p: any) => p.postByUser?.id).filter(Boolean);
     const businessIds = posts.map((p: any) => p.postByBusiness?.id).filter(Boolean);
 
-
-    
-    console.log("raw posts images",postIds,userIds,businessIds)
-    console.log('descriptions', descriptors)
-
      if (postIds.length > 0) {
       descriptors.push({
         resourceType: 'post',
@@ -309,7 +311,6 @@ export class PostServiceDrizzleQueryOptimized {
 console.log('descriptions', descriptors)
      const { featuredImages, galleries, profilePics, businessLogos } = 
       await this.mediaHelper.getMediaMapsForResources(descriptors);
-
       console.log('feature,galleries,profile, business',featuredImages,galleries,profilePics,businessIds)
 
     // Get likes counts for all posts
@@ -382,8 +383,14 @@ console.log('descriptions', descriptors)
           name: `${post.postByUser.firstName} ${post.postByUser.lastName}`,
           firstName: post.postByUser.firstName,
           lastName: post.postByUser.lastName,
-          profilePic: userProfilePic?.url || null,
-          profession: post.postByUser.profession?.name || null,
+          profilePic: userProfilePic ? {
+    id: userProfilePic.id,
+    url: userProfilePic.url,
+  } : null,
+  profession: post.postByUser.profession ? {
+    id: post.postByUser.profession.id,
+    name: post.postByUser.profession.name,
+  } : null,
         } : null,
         businessDetails: post.postByBusiness ? {
           id: post.postByBusiness.id,
@@ -417,8 +424,8 @@ console.log('descriptions', descriptors)
       // postByBusinessId: sanitizeField(data.postByBusinessId),
       featuredImage: sanitizeField(data.featuredImage),
       videoUrl: sanitizeField(data.videoUrl),
-      images: filterValidUUIDs(data.images && data.images.length > 0 ? data.images : null),
-      backgroundTheme: sanitizeField(data.backgroundTheme),
+      images: filterValidUUIDs(Array.isArray(data.images) ? data.images : []),
+      backgroundTheme: sanitizeField(data.backgroundTheme), 
       feeling: sanitizeField(data.feeling),
       location: sanitizeField(data.location),
       publishedAt: data.publishedAt || new Date(),

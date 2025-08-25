@@ -12,6 +12,16 @@ export const userResolvers=(db:any)=>{
          users: async (_: any, { filters }: any) => {
            return userService.list(filters || {});
          },
+         doctors: async (_: any, args: any, ctx: any) => {
+          const { filters = {} } = args;
+          return userService.listDoctors({
+            specializationIds: filters.specializations,
+            cities: filters.cities,
+            limit: filters.limit,
+            offset: filters.offset,
+            currentUserId: ctx.authUser?.id,
+          });
+        }
        },
        Mutation: {
          createUser: async (_: any, { data }: any, ctx: any) => {
@@ -42,5 +52,7 @@ export const userResolvers=(db:any)=>{
            return userService.delete(id);
          },
        },
+
+       
      };
 }

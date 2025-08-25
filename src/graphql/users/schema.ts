@@ -7,8 +7,8 @@ export const userSchema = gql`
   }
 
   type Profession {
-    id: ID!
-    name: String!
+    id: ID
+    name: String
   }
 
   type Specialization {
@@ -65,7 +65,13 @@ export const userSchema = gql`
     offset: Int
   }
 
-  
+   input DoctorFilter {
+    specializations: [ID!]
+    cities: [String!]
+    limit: Int = 10
+    offset: Int = 0
+  }
+
   input CreateUserInput {
   firstName: String!
   lastName: String!
@@ -107,6 +113,7 @@ export const userSchema = gql`
   type Query {
     user(id: ID!): User
     users(filters: UserFilter): UserList
+    doctors(filters: DoctorFilter): UserList
   }
 
   type Mutation {
