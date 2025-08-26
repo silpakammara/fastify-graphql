@@ -49,7 +49,11 @@ export const userResolvers=(db:any)=>{
            if (existing.userAuthId !== ctx.user.userId) {
              throw new Error("Forbidden: You can only delete your own profile");
            }
-           return userService.delete(id);
+           await userService.delete(id);
+           return {
+             success: true,
+             message: 'User deleted successfully',
+           };
          },
        },
 

@@ -11,7 +11,7 @@ import { sanitizeData } from '../utils/sanitizedData';
 export interface BusinessSimple extends Pick<BusinessDetail, "id" | "userId" | "name" | "companyName" | "role" | "isVerified"> {
   logo: SimpleMediaField | null;
   banner: SimpleMediaField | null;
-  owner?: any;
+  owner?:any
 }
 
 export class BusinessServiceSimple {
@@ -51,8 +51,10 @@ export class BusinessServiceSimple {
       banner,
       owner: {
         id: ownerData?.id,
-        name: `${ownerData?.firstName} ${ownerData?.lastName}`,
-        profilepic: profilepic
+        firstName: ownerData?.firstName,
+        lastName: ownerData?.lastName,
+        profilePic: profilepic?.url,
+        profession: ownerData.professionId || null
       }
     };
   }
@@ -77,9 +79,7 @@ export class BusinessServiceSimple {
       })
       .where(eq(businessDetails.id, id))
       .returning();
-    
     if (!updated) return null;
-    
     return this.findById(updated.id);
   }
 

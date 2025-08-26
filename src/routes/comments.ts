@@ -301,10 +301,7 @@ const commentRoutes: FastifyPluginAsync = async (fastify) => {
       commentsId: commentId,
       userProfileId: userProfile.id,
     });
-    // // Return a clean response with basic reply data and author info
-    // const responseData = {
-    //   content: newReply.content,
-    // };
+   
 
     return reply.code(201).send({
       success: true,

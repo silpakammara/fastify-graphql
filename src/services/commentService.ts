@@ -71,17 +71,6 @@ export class CommentService {
       .delete(comments)
       .where(eq(comments.id, id));
     
-    // Update comments count on post
-    // if (comment.postUpdatesId) {
-    //   await this.db
-    //     .update(postUpdates)
-    //     .set({
-    //       commentsCount: sql`GREATEST(${postUpdates.commentsCount} - 1, 0)`,
-    //       updatedAt: new Date(),
-    //     })
-    //     .where(eq(postUpdates.id, comment.postUpdatesId));
-    // }
-    
     return true;
   }
 

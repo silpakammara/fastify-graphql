@@ -119,6 +119,6 @@ export const userSchema = gql`
   type Mutation {
     createUser(data: CreateUserInput!): User!
     updateUser(id: ID!, data: UpdateUserInput!): User
-    deleteUser(id: ID!): Boolean!
+    deleteUser(id: ID!): DeleteResponse
   }
 `;

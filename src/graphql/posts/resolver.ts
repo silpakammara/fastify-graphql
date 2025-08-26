@@ -44,13 +44,10 @@ export const postResolvers = (db: any) => {
       createPost: async (_: any, { data }: any, ctx: any) => {
         const authUserId = ctx.reply.request.user.userId;
         const userProfile = await userProfileService.findByAuthUserId(authUserId);
-
         if (!userProfile) {
           throw new Error('User profile required to create posts');
         }
-
         const business = await businessService.findByUserId(userProfile.id);
-
         const cleanedBody = { ...data };
         Object.keys(cleanedBody).forEach(key => {
           if (cleanedBody[key] === 'string' || cleanedBody[key] === '') {
@@ -112,7 +109,6 @@ export const postResolvers = (db: any) => {
             throw new Error('Unauthorized to delete this post');
           }
         }
-
         await postService.delete(id);
         return { success: true, message: 'Post deleted successfully' };
       },
