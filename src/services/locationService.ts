@@ -21,7 +21,7 @@ export class LocationService {
     const [country] = await this.db
       .select()
       .from(countries)
-      .where(eq(countries.code, code))
+      .where(sql`${countries.code} ILIKE ${code}`)
       .limit(1);
     
     return country || null;
@@ -63,9 +63,10 @@ export class LocationService {
     const [state] = await this.db
       .select()
       .from(states)
-      .where(
-        sql`${states.countryId} = ${country.id} AND ${states.code} = ${stateCode}`
-      )
+      .where(sql`
+      ${states.countryId} = ${country.id}
+      AND ${states.code} ILIKE ${stateCode}
+    `)
       .limit(1);
     
     return state || null;
@@ -85,7 +86,7 @@ export class LocationService {
     const result = await this.db
       .select()
       .from(cities)
-      .where(eq(cities.stateCode, stateCode))
+      .where(sql`${cities.stateCode} ILIKE ${stateCode}`)
       .orderBy(cities.name);
     
     return result;
@@ -126,7 +127,7 @@ export class LocationService {
       .from(cities)
       .leftJoin(states, eq(cities.stateId, states.id))
       .leftJoin(countries, eq(states.countryId, countries.id))
-      .where(like(cities.name, `%${query}%`))
+      .where(sql`${cities.name} ILIKE ${'%' + query + '%'}`)
       .limit(limit)
       .orderBy(cities.name);
 

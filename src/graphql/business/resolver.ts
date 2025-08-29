@@ -9,17 +9,14 @@ export function businessResolvers(db: any) {
   return {
     Query: {
       businesses: async (_: any, { filters }: any, ctx: any) => {
-       await ctx.reply.request.jwtVerify();
         return businessService.list(filters || {});
       },
       business: async (_: any, { id }: any, ctx: any) => {
-        await ctx.reply.request.jwtVerify();
         return businessService.findById(id);
       },
     },
     Mutation: {
       createBusiness: async (_: any, { input }: any, ctx: any) => {
-         await ctx.reply.request.jwtVerify();
         const authUserId = ctx.reply.request.user.userId;
         const userProfile = await userProfileService.findByAuthUserId(authUserId);
         if (!userProfile) {
@@ -32,7 +29,6 @@ export function businessResolvers(db: any) {
         });
       },
       updateBusiness: async (_: any, { id, input }: any, ctx: any) => {
-         await ctx.reply.request.jwtVerify();
         const authUserId = ctx.reply.request.user.userId;
         const business = await businessService.findById(id);
         if (!business) throw new Error('Business not found');
@@ -43,7 +39,6 @@ export function businessResolvers(db: any) {
         return businessService.update(id, input);
       },
       deleteBusiness: async (_: any, { id }: any, ctx: any) => {
-         await ctx.reply.request.jwtVerify();
         const authUserId = ctx.reply.request.user.userId;
         const business = await businessService.findById(id);
         if (!business) throw new Error('Business not found');

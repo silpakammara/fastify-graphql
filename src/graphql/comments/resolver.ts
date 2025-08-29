@@ -11,7 +11,6 @@ export function commentResolvers(db: any) {
   return {
     Query: {
       commentsByPost: async (_: any, { postId, limit, offset }: any, ctx: any) => {
-        await ctx.reply.request.jwtVerify();
         const post = await postService.findById(postId);
         if (!post) throw new Error('Post not found');
         const result = await commentService.getCommentsByPost(postId, { limit, offset });
@@ -24,7 +23,6 @@ export function commentResolvers(db: any) {
         };
       },
       repliesByComment: async (_: any, { commentId, limit, offset }: any, ctx: any) => {
-        await ctx.reply.request.jwtVerify();
         const comment = await commentService.findCommentById(commentId);
         if (!comment) throw new Error('Comment not found');
      const result = await commentService.getRepliesByComment(commentId, { limit, offset });
@@ -41,7 +39,6 @@ export function commentResolvers(db: any) {
 
     Mutation: {
       addComment: async (_: any, { postId, content }: any, ctx: any) => {
-        await ctx.reply.request.jwtVerify();
         const authUserId = ctx.reply.request.user.userId;
         const post = await postService.findById(postId);
         if (!post) throw new Error('Post not found');
@@ -55,7 +52,6 @@ export function commentResolvers(db: any) {
       },
 
       updateComment: async (_: any, { commentId, content }: any, ctx: any) => {
-        await ctx.reply.request.jwtVerify();
         const authUserId = ctx.reply.request.user.userId;
         const comment = await commentService.findCommentById(commentId);
         if (!comment) throw new Error('Comment not found');
@@ -67,7 +63,6 @@ export function commentResolvers(db: any) {
       },
 
       deleteComment: async (_: any, { commentId }: any, ctx: any) => {
-        await ctx.reply.request.jwtVerify();
         const authUserId = ctx.reply.request.user.userId;
         const comment = await commentService.findCommentById(commentId);
         if (!comment) throw new Error('Comment not found');
@@ -80,7 +75,6 @@ export function commentResolvers(db: any) {
       },
 
       addReply: async (_: any, { commentId, content }: any, ctx: any) => {
-        await ctx.reply.request.jwtVerify();
         const authUserId = ctx.reply.request.user.userId;
         const comment = await commentService.findCommentById(commentId);
         if (!comment) throw new Error('Comment not found');
@@ -95,7 +89,6 @@ export function commentResolvers(db: any) {
       },
 
     deleteReply:async(_: any, { replyId }: any, ctx: any) => {
-        await ctx.reply.request.jwtVerify();
         const authUserId = ctx.reply.request.user.userId;
         const reply = await commentService.findReplyById(replyId);
         if (!reply) throw new Error('Reply not found');

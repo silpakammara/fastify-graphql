@@ -6,10 +6,10 @@ export const userResolvers=(db:any)=>{
 
      return {
        Query: {
-         user: async (_: any, { id }: { id: string }) => {
+         user: async (_: any, { id }: { id: string },ctx:any) => {
            return userService.findById(id);
          },
-         users: async (_: any, { filters }: any) => {
+         users: async (_: any, { filters }: any, ctx:any) => {
            return userService.list(filters || {});
          },
          doctors: async (_: any, args: any, ctx: any) => {
@@ -25,12 +25,10 @@ export const userResolvers=(db:any)=>{
        },
        Mutation: {
          createUser: async (_: any, { data }: any, ctx: any) => {
-           if (!ctx.user) throw new Error("Unauthorized");
            data.userAuthId = ctx.user.userId;
            return userService.create(data);
          },
          updateUser: async (_: any, { id, data }: any, ctx: any) => {
-           if (!ctx.user) throw new Error("Unauthorized")
              const existing = await userService.findById(id);
              if (!existing) throw new Error("User not found");
              if (existing.userAuthId !== ctx.user.userId) {
@@ -42,7 +40,6 @@ export const userResolvers=(db:any)=>{
          },
 
          deleteUser: async (_: any, { id }: any, ctx: any) => {
-           if (!ctx.user) throw new Error("Unauthorized");
            const existing = await userService.findById(id);
            console.log(existing, ctx.user);
            if (!existing) throw new Error("User not found");
